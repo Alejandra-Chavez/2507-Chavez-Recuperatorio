@@ -1,0 +1,46 @@
+.centrar {
+  text-align: center;
+  margin-top: 290px;
+}
+.boton-inicio {
+  background-color: rgb(241, 20, 20);
+  border: none;
+  color: rgb(146, 16, 16);
+  padding: 30px 70px;
+  text-decoration: none;
+  border-radius: 30px;
+  font-family: sans-serif;
+  display: inline-block;
+  font-size: 20px;
+}
+.boton-inicio:hover {
+  background-color: rgb(255, 122, 122);
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: linear-gradient(#060638, #28289e);
+}
+.modificar {
+  text-align: center;
+  margin-top: 290px;
+}
+#saludo {
+  color: honeydew;
+  display: inline-block;
+}
+#instrucciones {
+  color: honeydew;
+}
+#imagen-disney {
+        display: block;
+        margin: 20px auto;
+        width: 300px;
+    }
+.imagen-personaje{
+    display:none;
+}

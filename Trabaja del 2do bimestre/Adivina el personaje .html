@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivina el persanaje</title>
+
+</head>
+
+<body style="background: linear-gradient(#060638, #28289e);margin: 0;padding: 0;height: 100vh;">
+    <p id="adivinanza" style="text-align: center; color:white; font-size: 50px; font-weight: bold; margin-bottom:30px;">
+        Adivina el siguiente personaje:
+    </p>
+    <div id="info" style="color: white;">
+        <p id="vidas" style="text-align: center; font-size: 30px; margin-bottom: 20px;">
+            Vidas: 5
+        </p>
+        <p id="puntos" style="margin-left: 20px;text-align: center; font-size: 30px; margin-bottom: 20px;">Puntos: 0</p>
+    </div>
+    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+
+        <p id="resultado" style="font-size: 18px; margin-top: 20px;"></p>
+
+        <img id="imagen-personaje"
+            style="max-width: 35%; margin-top: 20px; margin-bottom: 20px; display: none; border-radius: 30px;">
+
+        <input id="cajaText" placeholder="¿Quién es este personaje?"
+            style="padding: 10px; font-size: 16px; margin-bottom: 15px; width: 300px;">
+
+        <button id="boton"
+            style="padding: 10px 20px; font-size: 16px; cursor: pointer; width: 150px;">Respuesta</button>
+    </div>
+    <script>
+        let personajeActual = null;
+        let vidas = 5;
+        let puntos = 0;
+        const puntosElemento = document.getElementById("puntos");
+        const vidasElemento = document.getElementById("vidas");
+        const resultadoElemento = document.getElementById("resultado");
+
+        function personajeRandom() {
+            fetch("https://api.disneyapi.dev/character")
+                .then(res => res.json())
+                .then(data => {
+                    const personajes = data.data;
+                    personajeActual = personajes[Math.floor(Math.random() * personajes.length)];
+                    const imagen = document.getElementById("imagen-personaje");
+                    imagen.src = personajeActual.imageUrl;
+                    imagen.style.display = "block";
+                    console.clear();
+                    console.log(`Nuevo personaje: ${personajeActual.name}`);
+                });
+        }
+        document.getElementById("boton").addEventListener("click", () => {
+            if (personajeActual) {
+                const respuestaUsuario = document.getElementById("cajaText").value.trim().toLowerCase();
+                const nombrePersonaje = personajeActual.name.trim().toLowerCase();
+                const resultadoElemento = document.getElementById("resultado");
+
+                if (!respuestaUsuario) {
+                    resultadoElemento.textContent = "Por favor, ingresa el nombre del personaje.";
+                    resultadoElemento.style.color = "red";
+                    return;
+                }
+
+
+                if (nombrePersonaje.includes(respuestaUsuario)) {
+                    resultadoElemento.textContent = "¡Correcto! buen trabajo";
+                    resultadoElemento.style.color = "white";
+                    puntos += 1;
+                    puntosElemento.textContent = `Puntos: ${puntos}`;
+
+                    if (puntos >= 15) {
+                        resultadoElemento.textContent = "¡Felicidades! Has ganado el juego.";
+                        resultadoElemento.style.color = "green";
+                        document.getElementById("boton").disabled = true;
+                        setTimeout(() => {
+                            alert("¡Has ganado! El juego se reiniciará.");
+                            location.reload();
+                        }, 2000);
+                        return;
+                    }
+                } else {
+                    resultadoElemento.textContent = `Incorrecto. Era: ${personajeActual.name}`;
+                    resultadoElemento.style.color = "white";
+
+                    vidas -= 1;
+                    vidasElemento.textContent = `Vidas: ${vidas}`;
+
+
+                    if (vidas <= 0) {
+                        resultadoElemento.textContent = "¡Juego terminado! Has perdido todas tus vidas.";
+                        resultadoElemento.style.color = "red";
+                        document.getElementById("boton").disabled = true;
+                        setTimeout(() => {
+                            alert("¡Has perdido! El juego se reiniciará.");
+                            location.reload();
+                        }, 2000);
+                        return;   
+                    }
+
+                }
+                setTimeout(() => {
+                    document.getElementById("cajaText").value = "";
+                    document.getElementById("resultado").textContent = "";
+                    personajeRandom();
+                }, 2000);
+            }
+        });
+        personajeRandom();
+    </script>
+</body>
+
+</html>
